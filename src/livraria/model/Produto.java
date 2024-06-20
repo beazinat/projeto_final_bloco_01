@@ -1,49 +1,47 @@
 package livraria.model;
 
 public abstract class Produto {
-	private int code;
-	private String title;
-	private double price;
-	private int quantity;
+    private static int nextCode = 1;
 
-	public Produto(int code, String title, double price, int quantity) {
-		this.code = code;
-		this.title = title;
-		this.price = price;
-		this.quantity = quantity;
-	}
+    private int code;
+    private String title;
+    private double price;
+    private int quantity;
 
-	public int getCode() {
-		return code;
-	}
+    public Produto(String title, double price, int quantity) {
+        this.code = nextCode++;
+        this.title = title;
+        this.price = price;
+        this.quantity = quantity;
+    }
 
-	public void setCode(int code) {
-		this.code = code;
-	}
+    public int getCode() {
+        return code;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public double getPrice() {
-		return price;
-	}
+    public double getPrice() {
+        return price;
+    }
 
-	public void setPrice(double price) {
-		this.price = price;
-	}
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public int getQuantity() {
+        return quantity;
+    }
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
-	public abstract void displayDetails();
+    public abstract void displayDetails();
 }

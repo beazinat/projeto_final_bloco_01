@@ -16,7 +16,7 @@ public class Menu {
         Scanner sc = new Scanner(System.in);
         LivrariaController livrariaController = new LivrariaController();
 
-        int option, code, quantity, type;
+        int option, quantity, type;
         String title, genre = "", author = "";
         double price;
 
@@ -81,12 +81,12 @@ public class Menu {
                     sc.nextLine();
 
                     if (type == 1) {
-                        Livro livro = new Livro(0, title, price, quantity, author, genre);
+                        Livro livro = new Livro(title, price, quantity, author, genre);
                         livrariaController.add(livro);
                     } else if (type == 2) {
                         System.out.println("Digite a Edição da Revista: ");
                         String edition = sc.nextLine();
-                        Revista revista = new Revista(0, title, price, quantity, edition);
+                        Revista revista = new Revista(title, price, quantity, edition);
                         livrariaController.add(revista);
                     }
 
@@ -98,20 +98,7 @@ public class Menu {
 
                     List<Produto> listaProdutos = livrariaController.findAll();
                     for (Produto p : listaProdutos) {
-                        if (p instanceof Livro) {
-                            Livro livro = (Livro) p;
-                            System.out.println("Livro [Código: " + p.getCode() + ", Título: " + p.getTitle() + ", Autor: "
-                                    + livro.getAuthor() + ", Gênero: " + livro.getGenre() + ", Preço: " + p.getPrice()
-                                    + ", Quantidade: " + p.getQuantity() + "]");
-                        } else if (p instanceof Revista) {
-                            Revista revista = (Revista) p;
-                            System.out.println("Revista [Código: " + p.getCode() + ", Título: " + p.getTitle() + ", Edição: "
-                                    + revista.getEdition() + ", Preço: " + p.getPrice() + ", Quantidade: "
-                                    + p.getQuantity() + "]");
-                        } else {
-                            System.out.println("Produto [Código: " + p.getCode() + ", Título: " + p.getTitle() + ", Preço: "
-                                    + p.getPrice() + ", Quantidade: " + p.getQuantity() + "]");
-                        }
+                        p.displayDetails();
                     }
 
                     keyPress();
@@ -120,28 +107,12 @@ public class Menu {
                     System.out.println(Cores.TEXT_BLUE + "Consultar Estoque - Por Código do Produto\n\n");
 
                     System.out.println("Digite o Código do Produto: ");
-                    code = sc.nextInt();
+                    int code = sc.nextInt();
                     sc.nextLine();
 
                     Produto produtoConsultado = livrariaController.findByCode(code);
                     if (produtoConsultado != null) {
-                        if (produtoConsultado instanceof Livro) {
-                            Livro livro = (Livro) produtoConsultado;
-                            System.out.println("Livro [Código: " + produtoConsultado.getCode() + ", Título: "
-                                    + produtoConsultado.getTitle() + ", Autor: " + livro.getAuthor() + ", Gênero: "
-                                    + livro.getGenre() + ", Preço: " + produtoConsultado.getPrice() + ", Quantidade: "
-                                    + produtoConsultado.getQuantity() + "]");
-                        } else if (produtoConsultado instanceof Revista) {
-                            Revista revista = (Revista) produtoConsultado;
-                            System.out.println("Revista [Código: " + produtoConsultado.getCode() + ", Título: "
-                                    + produtoConsultado.getTitle() + ", Edição: " + revista.getEdition() + ", Preço: "
-                                    + produtoConsultado.getPrice() + ", Quantidade: " + produtoConsultado.getQuantity()
-                                    + "]");
-                        } else {
-                            System.out.println("Produto [Código: " + produtoConsultado.getCode() + ", Título: "
-                                    + produtoConsultado.getTitle() + ", Preço: " + produtoConsultado.getPrice()
-                                    + ", Quantidade: " + produtoConsultado.getQuantity() + "]");
-                        }
+                        produtoConsultado.displayDetails();
                     } else {
                         System.out.println("Produto não encontrado!");
                     }
