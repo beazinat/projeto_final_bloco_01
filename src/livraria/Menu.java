@@ -8,193 +8,226 @@ import livraria.controller.LivrariaController;
 import livraria.model.Livro;
 import livraria.model.Produto;
 import livraria.model.Revista;
-import livraria.util.Cores;
+import livraria.util.*;
 
 public class Menu {
+	private static final Scanner sc = new Scanner(System.in);
+	private static final LivrariaController livrariaController = new LivrariaController();
+
 	public static void main(String[] args) {
-
-		Scanner sc = new Scanner(System.in);
-		LivrariaController livrariaController = new LivrariaController();
-
-		int option, quantity, type;
-		String title, genre = "", author = "";
-		double price;
+		int option;
 
 		while (true) {
-			System.out.println(Cores.TEXT_GREEN + Cores.ANSI_BLACK_BACKGROUND
-					+ "*****************************************************");
-			System.out.println("                                                     ");
-			System.out.println("                    LIVRARIA GEN                     ");
-			System.out.println("                                                     ");
-			System.out.println("*****************************************************");
-			System.out.println("                                                     ");
-			System.out.println("            1 - Adicionar Produto                    ");
-			System.out.println("            2 - Listar Todos os Produtos             ");
-			System.out.println("            3 - Listar Produtos por Categoria        ");
-			System.out.println("            4 - Consultar Estoque                    ");
-			System.out.println("            5 - Editar Estoque                       ");
-			System.out.println("            6 - Apagar Produto                       ");
-			System.out.println("            9 - Sair                                 ");
-			System.out.println("                                                     ");
-			System.out.println("*****************************************************");
-			System.out.println("Entre com a opção desejada:                          ");
-			System.out.println("                                                     ");
-
+			printMenu();
 			try {
 				option = sc.nextInt();
 				sc.nextLine();
 			} catch (InputMismatchException e) {
-				System.out.println("\nDigite valores inteiros!");
+				System.out.println("Digite um número válido!");
 				sc.nextLine();
-				option = 0;
-			}
-
-			if (option == 9) {
-				System.out.println(Cores.TEXT_BLUE_BOLD + "\nLivraria Gen - Conhecimento de gerações!");
-				about();
-				sc.close();
-				System.exit(0);
+				continue;
 			}
 
 			switch (option) {
 			case 1:
-				System.out.println(Cores.TEXT_BLUE + "Adicionar Produto\n\n");
-
-				do {
-					System.out.println("Digite o Tipo do Produto (1- Livro | 2- Revista): ");
-					type = sc.nextInt();
-					sc.nextLine();
-
-					if (type == 1) {
-						System.out.println("Digite o Autor: ");
-						author = sc.nextLine();
-						System.out.println("Digite o Gênero: ");
-						genre = sc.nextLine();
-					}
-				} while (type < 1 || type > 2);
-
-				System.out.println("Digite o Título: ");
-				title = sc.nextLine();
-				System.out.println("Digite a quantidade: ");
-				quantity = sc.nextInt();
-				System.out.println("Digite o Preço: ");
-				price = sc.nextDouble();
-				sc.nextLine();
-
-				if (type == 1) {
-					Livro livro = new Livro(title, price, quantity, author, genre);
-					livrariaController.add(livro);
-				} else if (type == 2) {
-					System.out.println("Digite a Edição da Revista: ");
-					String edition = sc.nextLine();
-					Revista revista = new Revista(title, price, quantity, edition);
-					livrariaController.add(revista);
-				}
-
-				System.out.println("Produto adicionado com sucesso!");
-				keyPress();
+				addProduct();
 				break;
 			case 2:
-				System.out.println(Cores.TEXT_BLUE + "Listar Todos os Produtos\n\n");
-
-				List<Produto> listaProdutos = livrariaController.findAll();
-				if (!listaProdutos.isEmpty()) {
-					for (Produto p : listaProdutos) {
-						p.displayDetails();
-					}
-				} else {
-					System.out.println("Nenhum produto encontrado.");
-				}
-
-				keyPress();
+				listAllProducts();
 				break;
 			case 3:
-				System.out.println(Cores.TEXT_BLUE + "Listar Produtos por Categoria\n\n");
-
-				System.out.println("Digite a Categoria (Livro ou Revista): ");
-				String categoria = sc.nextLine();
-
-				List<Produto> produtosPorCategoria = livrariaController.findByCategory(categoria);
-				if (!produtosPorCategoria.isEmpty()) {
-					for (Produto p : produtosPorCategoria) {
-						p.displayDetails();
-					}
-				} else {
-					System.out.println("Nenhum produto encontrado para a categoria: " + categoria);
-				}
-
-				keyPress();
+				listProductsByCategory();
 				break;
 			case 4:
-				System.out.println(Cores.TEXT_BLUE + "Consultar Estoque - Por Código do Produto\n\n");
-
-				System.out.println("Digite o Código do Produto: ");
-				int code = sc.nextInt();
-				sc.nextLine();
-
-				Produto produtoConsultado = livrariaController.findByCode(code);
-				if (produtoConsultado != null) {
-					produtoConsultado.displayDetails();
-				} else {
-					System.out.println("Produto não encontrado!");
-				}
-
-				keyPress();
+				consultStock();
 				break;
 			case 5:
-				System.out.println(Cores.TEXT_BLUE + "Editar Estoque\n\n");
-
-				System.out.println("Digite o Código do Produto: ");
-				code = sc.nextInt();
-				sc.nextLine();
-				System.out.println("Digite a nova quantidade: ");
-				quantity = sc.nextInt();
-				sc.nextLine();
-
-				Produto produtoEditado = livrariaController.findByCode(code);
-				if (produtoEditado != null) {
-					produtoEditado.setQuantity(quantity);
-					livrariaController.update(code, produtoEditado);
-					System.out.println("Estoque editado com sucesso!");
-				} else {
-					System.out.println("Produto não encontrado!");
-				}
-
-				keyPress();
+				editStock();
 				break;
 			case 6:
-				System.out.println(Cores.TEXT_BLUE + "Apagar Produto\n\n");
-
-				System.out.println("Digite o Código do Produto: ");
-				code = sc.nextInt();
-				sc.nextLine();
-
-				livrariaController.delete(code);
-				System.out.println("Produto apagado com sucesso!");
-
-				keyPress();
+				deleteProduct();
 				break;
+			case 9:
+				System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+						+ "\nSaindo...");
+				sc.close();
+				System.exit(0);
 			default:
-				System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida!\n");
+				System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+						+ "Opção inválida!");
 				break;
 			}
 		}
 	}
 
-	public static void about() {
-		System.out.println("\n*********************************************************");
-		System.out.println("Projeto Desenvolvido por: Beazinat Gonçalves");
-		System.out.println("E-mail - beazinat@outlook.com");
-		System.out.println("github.com/beazinat");
-		System.out.println("*********************************************************");
+	private static void printMenu() {
+		System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+                +"\n*****************************************************");
+		System.out.println(Cores.TEXT_PURPLE_BOLD +
+				"                  LIVRARIA GEN                       ");
+		System.out.println(Cores.TEXT_YELLOW_BOLD 
+				+ "*****************************************************");
+		System.out.println(Cores.TEXT_PURPLE_BOLD +
+				"            1 - Adicionar Produto                    ");
+		System.out.println("            2 - Listar Todos os Produtos             ");
+		System.out.println("            3 - Listar Produtos por Categoria        ");
+		System.out.println("            4 - Consultar Estoque                    ");
+		System.out.println("            5 - Editar Estoque                       ");
+		System.out.println("            6 - Apagar Produto                       ");
+		System.out.println("            9 - Sair                                 ");
+		System.out.println(Cores.TEXT_YELLOW_BOLD 
+				+ "*****************************************************");
+		System.out.print("Entre com a opção desejada: ");
 	}
 
-	public static void keyPress() {
+	private static void addProduct() {
+		System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND
+				+ "\nAdicionar Produto\n");
+
+		int type;
+		do {
+			System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+					+ "Digite o Tipo do Produto (1- Livro | 2- Revista): ");
+			type = sc.nextInt();
+			sc.nextLine();
+		} while (type != 1 && type != 2);
+
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite o Título: ");
+		String title = sc.nextLine();
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite a Quantidade: ");
+		int quantity = sc.nextInt();
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite o Preço: ");
+		double price = sc.nextDouble();
+		sc.nextLine();
+
+		if (type == 1) {
+			System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+					+ "Digite o Autor: ");
+			String author = sc.nextLine();
+			System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+					+ "Digite o Gênero: ");
+			String genre = sc.nextLine();
+			Livro livro = new Livro(title, price, quantity, author, genre);
+			livrariaController.add(livro);
+		} else if (type == 2) {
+			System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+					+ "Digite a Edição da Revista: ");
+			String edition = sc.nextLine();
+			Revista revista = new Revista(title, price, quantity, edition);
+			livrariaController.add(revista);
+		}
+
+		System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+				+ "Produto adicionado com sucesso!");
+		keyPress();
+	}
+
+	private static void listAllProducts() {
+		System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND
+				+ "\nListar Todos os Produtos\n");
+		List<Produto> listProducts = livrariaController.findAll();
+		if (!listProducts.isEmpty()) {
+			listProducts.forEach(Produto::displayDetails);
+		} else {
+			System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+					+ "Nenhum produto encontrado!");
+		}
+		keyPress();
+	}
+
+	private static void listProductsByCategory() {
+		System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND
+				+ "\nListar Produtos por Categoria\n");
+
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite a Categoria (Livro ou Revista): ");
+		String category = sc.nextLine();
+
+		List<Produto> productsByCategory = livrariaController.findByCategory(category);
+		if (!productsByCategory.isEmpty()) {
+			productsByCategory.forEach(Produto::displayDetails);
+		} else {
+			System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+					+ "Nenhum produto encontrado para a categoria: " + category);
+		}
+
+		keyPress();
+	}
+
+	private static void consultStock() {
+		System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND
+				+ "\nConsultar Estoque - Por Código do Produto\n");
+
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite o Código do Produto: ");
+		int code = sc.nextInt();
+		sc.nextLine();
+
+		Produto consultedProduct = livrariaController.findByCode(code);
+		if (consultedProduct != null) {
+			consultedProduct.displayDetails();
+		} else {
+			System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+					+ "Produto não encontrado!");
+		}
+
+		keyPress();
+	}
+
+	private static void editStock() {
+		System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND
+				+ "\nEditar Estoque\n");
+
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite o Código do Produto: ");
+		int code = sc.nextInt();
+		sc.nextLine();
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite a nova quantidade: ");
+		int quantity = sc.nextInt();
+		sc.nextLine();
+
+		Produto editedProduct = livrariaController.findByCode(code);
+		if (editedProduct != null) {
+			editedProduct.setQuantity(quantity);
+			livrariaController.update(code, editedProduct);
+			System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+					+ "Estoque editado com sucesso!");
+		} else {
+			System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+					+ "Produto não encontrado!");
+		}
+
+		keyPress();
+	}
+
+	private static void deleteProduct() {
+		System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND
+				+ "\nApagar Produto\n");
+
+		System.out.println(Cores.TEXT_WHITE_BRIGHT + Cores.ANSI_BLACK_BACKGROUND
+				+ "Digite o Código do Produto: ");
+		int code = sc.nextInt();
+		sc.nextLine();
+
+		livrariaController.delete(code);
+		System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+				+ "Produto apagado com sucesso!");
+
+		keyPress();
+	}
+
+	private static void keyPress() {
 		try {
-			System.out.println(Cores.TEXT_RESET + "\n\nPressione Enter para Continuar...");
+			System.out.println(Cores.TEXT_PURPLE_BOLD + Cores.ANSI_BLACK_BACKGROUND
+					+ "\nPressione Enter para Continuar...");
 			System.in.read();
 		} catch (IOException e) {
-			System.out.println("Você pressionou uma tecla diferente de enter!");
+			System.out.println(Cores.TEXT_YELLOW_BOLD + Cores.ANSI_BLACK_BACKGROUND
+					+ "Você pressionou uma tecla diferente de Enter!");
 		}
 	}
 }
