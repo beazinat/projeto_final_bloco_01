@@ -3,21 +3,18 @@ package livraria;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import livraria.util.Cores;
 
 public class Menu {
     public static void main(String[] args) {
         
         Scanner sc = new Scanner(System.in);
-
+        
         int option, code, quantity, type;
         String title, genre = "", author = "";
         double price;
         
-        
         while (true) {
-            
             System.out.println(Cores.TEXT_GREEN + Cores.ANSI_BLACK_BACKGROUND 
                              + "*****************************************************");
             System.out.println("                                                     ");
@@ -75,6 +72,8 @@ public class Menu {
                     quantity = sc.nextInt();
                     System.out.println("Digite o Preço: ");
                     price = sc.nextDouble();
+                    sc.nextLine();
+
                     
                     System.out.println("Produto adicionado com sucesso!");
                     keyPress();
@@ -82,7 +81,7 @@ public class Menu {
                 case 2:
                     System.out.println(Cores.TEXT_BLUE + "Listar Todos os Produtos\n\n");
                     
-                    System.out.println("Lista de produtos ...");
+                    
                     keyPress();
                     break;
                 case 3:
@@ -90,7 +89,9 @@ public class Menu {
                     
                     System.out.println("Digite o Código do Produto: ");
                     code = sc.nextInt();
-                    System.out.println("Produto consultado ...");
+                    sc.nextLine();
+                    
+                    
                     keyPress();
                     break;
                 case 4:
@@ -98,9 +99,12 @@ public class Menu {
                     
                     System.out.println("Digite o Código do Produto: ");
                     code = sc.nextInt();
+                    sc.nextLine();
                     System.out.println("Digite a nova quantidade: ");
                     quantity = sc.nextInt();
-                    System.out.println("Estoque editado ...");
+                    sc.nextLine();
+                    
+                    
                     keyPress();
                     break;
                 case 5:
@@ -108,7 +112,10 @@ public class Menu {
                     
                     System.out.println("Digite o Código do Produto: ");
                     code = sc.nextInt();
-                    System.out.println("Produto apagado ...");
+                    sc.nextLine();
+                    
+                    System.out.println("Produto apagado com sucesso!");
+                    
                     keyPress();
                     break;
                 default:
@@ -134,5 +141,5 @@ public class Menu {
         } catch (IOException e) {
             System.out.println("Você pressionou uma tecla diferente de enter!");
         }
-    }
+    }   
 }
