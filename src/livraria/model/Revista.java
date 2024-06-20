@@ -3,8 +3,8 @@ package livraria.model;
 public class Revista extends Produto {
 	private String edition;
 
-	public Revista(int code, String title, double price, int quantity, String edition) {
-		super(code, title, price, quantity);
+	public Revista(String title, double price, int quantity, String edition) {
+		super(title, price, quantity);
 		this.edition = edition;
 	}
 
@@ -12,8 +12,9 @@ public class Revista extends Produto {
 		return edition;
 	}
 
-	public void setEdition(String edition) {
-		this.edition = edition;
+	@Override
+	public String getCategory() {
+		return "Revista";
 	}
 
 	@Override

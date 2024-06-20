@@ -4,8 +4,8 @@ public class Livro extends Produto {
 	private String author;
 	private String genre;
 
-	public Livro(int code, String title, double price, int quantity, String author, String genre) {
-		super(code, title, price, quantity);
+	public Livro(String title, double price, int quantity, String author, String genre) {
+		super(title, price, quantity);
 		this.author = author;
 		this.genre = genre;
 	}
@@ -14,16 +14,13 @@ public class Livro extends Produto {
 		return author;
 	}
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
 	public String getGenre() {
 		return genre;
 	}
 
-	public void setGenre(String genre) {
-		this.genre = genre;
+	@Override
+	public String getCategory() {
+		return "Livro";
 	}
 
 	@Override
