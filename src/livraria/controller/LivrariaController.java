@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LivrariaController implements LivrariaRepository<Produto> {
 	private Map<String, List<Produto>> productsByCategory = new HashMap<>();
@@ -14,51 +16,43 @@ public class LivrariaController implements LivrariaRepository<Produto> {
 	@Override
 	public void add(Produto item) {
 		String category = item.getCategory();
-		if (!productsByCategory.containsKey(category)) {
-			productsByCategory.put(category, new ArrayList<>());
-		}
-		productsByCategory.get(category).add(item);
+		productsByCategory.computeIfAbsent(category, k -> new ArrayList<>()).add(item);
 	}
 
 	@Override
 	public void update(int code, Produto item) {
-		Produto p = findByCode(code);
-		if (p != null) {
+		Optional.ofNullable(findByCode(code)).ifPresent(p -> {
 			String category = p.getCategory();
 			List<Produto> products = productsByCategory.get(category);
-			int index = products.indexOf(p);
-			products.set(index, item);
-		}
+			if (products != null) {
+				int index = products.indexOf(p);
+				if (index != -1) {
+					products.set(index, item);
+				}
+			}
+		});
 	}
 
 	@Override
 	public void delete(int code) {
-		Produto p = findByCode(code);
-		if (p != null) {
+		Optional.ofNullable(findByCode(code)).ifPresent(p -> {
 			String category = p.getCategory();
-			productsByCategory.get(category).remove(p);
-		}
+			List<Produto> products = productsByCategory.get(category);
+			if (products != null) {
+				products.remove(p);
+			}
+		});
 	}
 
 	@Override
 	public Produto findByCode(int code) {
-		for (List<Produto> products : productsByCategory.values()) {
-			for (Produto p : products) {
-				if (p.getCode() == code) {
-					return p;
-				}
-			}
-		}
-		return null;
+		return productsByCategory.values().stream().flatMap(List::stream).filter(p -> p.getCode() == code).findFirst()
+				.orElse(null);
 	}
 
 	@Override
 	public List<Produto> findAll() {
-		List<Produto> allProducts = new ArrayList<>();
-		for (List<Produto> products : productsByCategory.values()) {
-			allProducts.addAll(products);
-		}
-		return allProducts;
+		return productsByCategory.values().stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 
 	public List<Produto> findByCategory(String category) {
